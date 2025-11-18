@@ -5,6 +5,9 @@
 # Re-include all directories so Git will descend into them to check for whitelisted files
 !*/
 !*.py
+!.python-version
+# docs
+!*.md
 # config
 !*.toml
 !*.lock

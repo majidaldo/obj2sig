@@ -1,0 +1,73 @@
+
+from typing import Any
+
+# obj 2 sig: all params in obj become params in sig
+# default values put into obj init
+
+
+def sig(obj: Any):
+    from inspect import signature
+    from inspect import Signature, Parameter
+    params = []
+
+    star = '_star_'
+    for pn, cp in vars(obj.__class__).items():
+        # property name , class property
+        kw_only = True if pn==star else False # expected only once
+        
+        if isinstance(cp, property): # props will be taken as args
+            if kw_only:
+                if pn.startswith(star):
+                    k = Parameter.VAR_KEYWORD
+                else:
+                    k = Parameter.KEYWORD_ONLY
+            else:
+                if pn.startswith(star):
+                    k = Parameter.VAR_POSITIONAL
+                else:
+                    k = Parameter.POSITIONAL_OR_KEYWORD
+
+            r = getattr(obj, pn)
+            d = Parameter.empty if (r == ...) else r
+            a = signature(cp.fget).return_annotation
+            arg = Parameter(pn, k, default=d, annotation=a)
+            params.append(arg)
+    return params
+
+#def mod(sig: Signature, obj: Any):
+    #for p in sig.parameters:...
+
+
+def test(): 
+    def f(x, y):...
+
+    class Obj:
+
+
+        @property
+        def p(self) -> int: ...  #
+
+        _star_ = ''
+
+        @property
+        def z(self): return 'z'
+        @property
+        def a(self): return 'a'
+
+    _ = Obj()
+    _ = sig(_)
+    return _
+
+
+def _test():
+    import inspect
+    def my_function(a, b=10, *, c, **kwargs):
+        pass
+    sig = inspect.signature(my_function)
+    for name, param in sig.parameters.items():
+        print(f"Parameter '{name}': Kind = {param.kind}, Default = {param.default if param.default is not inspect.Parameter.empty else 'No Default'}")
+    # Output:
+    # Parameter 'a': Kind = POSITIONAL_OR_KEYWORD, Default = No Default
+    # Parameter 'b': Kind = POSITIONAL_OR_KEYWORD, Default = 10
+    # Parameter 'c': Kind = KEYWORD_ONLY, Default = No Default
+    # Parameter 'kwargs': Kind = VAR_KEYWORD, Default = No Default
