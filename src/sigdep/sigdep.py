@@ -9,9 +9,6 @@ def sig(obj: Any):
     kw_only = False
 
 
-    def is_var_property(p):
-        return isinstance(cp, var_property) # why isn't it this?!
-
     for pn, cp in vars(obj.__class__).items():
         # property name , class property
         if pn == star: kw_only = True # expected only once
