@@ -1,7 +1,7 @@
 [project]
 name = "sigdep"
-version = "0.1.0"
-description = "Add your description here"
+dynamic = ["version"]
+description = "Function Signature Dependencies"
 readme = "README.md"
 authors = [
     { name = "Majid alDosari", email = "majidaldosari-github@yahoo.com" }
@@ -9,9 +9,13 @@ authors = [
 requires-python = ">3.10"
 dependencies = []
 
-[project.scripts]
-sigdep = "sigdep:main"
+[dependency-groups]
+dev = [
+  "fire"
+]
 
 [build-system]
-requires = ["uv_build>=0.9.7,<0.10.0"]
-build-backend = "uv_build"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+[tool.hatch.version]
+path = "src/sigdep/__init__.py"

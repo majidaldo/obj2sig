@@ -11,3 +11,5 @@
 # config
 !*.toml
 !*.lock
+!*.yml
+!*.yaml
